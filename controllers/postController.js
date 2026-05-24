@@ -219,26 +219,18 @@ export const getTimelinePosts = async (
         req.params.userId
       );
 
-    const userPosts =
-      await postModel.find({
-        userId: currentUser._id,
-      });
-
-    const followingPosts =
-      await postModel.find({
-        userId: {
-          $in: currentUser.following,
-        },
-      });
-
-    const allPosts = [
-      ...userPosts,
-      ...followingPosts,
-    ];
-
+    const timelinePosts=await postModel.find({
+      userId:{
+        $in: [
+              currentUser._id,
+              ...currentUser.following
+        ]
+      }
+    }).sort(createdAt:-1);
+    
     const enrichedPosts =
       await Promise.all(
-        allPosts.map((post) =>
+        timelinePosts.map((post) =>
           enrichPost(post)
         )
       );
