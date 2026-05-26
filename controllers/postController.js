@@ -226,7 +226,7 @@ export const getTimelinePosts = async (
               ...currentUser.following
         ]
       }
-    }).sort(createdAt:-1);
+    }).sort({createdAt:-1});
     
     const enrichedPosts =
       await Promise.all(
