@@ -14,7 +14,7 @@ export const generatePost = async (req, res) => {
       });
     }
 
-    console.log("CONTROLLER KEY AT RUNTIME:", process.env.GEMINI_API_KEY ? "Loaded Successfully" : "MISSING");
+    //console.log("CONTROLLER KEY AT RUNTIME:", process.env.GEMINI_API_KEY ? "Loaded Successfully" : "MISSING");
 
     // Initialize the client
     const ai = new GoogleGenAI({
@@ -47,15 +47,15 @@ Rules:
       const currentModel = modelsToTry[i];
       
       try {
-        console.log(`Attempt ${i + 1}: Trying ${currentModel}...`);
+        //console.log(`Attempt ${i + 1}: Trying ${currentModel}...`);
         
         response = await ai.models.generateContent({
           model: currentModel,
           contents: finalPrompt,
         });
 
-        console.log(`Success with ${currentModel}`);
-        break; // Successfully got data, break out of the fallback loop!
+        //console.log(`Success with ${currentModel}`);
+        break;
 
       } catch (error) {
         const isRateLimitedOrBusy = error.status === 429 || error.status === 503;
@@ -64,7 +64,7 @@ Rules:
         if (isRateLimitedOrBusy && hasMoreFallbacks) {
           // Calculate an exponential wait time (e.g., 2 seconds, then 4 seconds)
           const waitTime = (i + 1) * 2000; 
-          console.warn(`Model ${currentModel} returned ${error.status}. Waiting ${waitTime / 1000}s before falling back to ${modelsToTry[i + 1]}...`);
+          //console.warn(`Model ${currentModel} returned ${error.status}. Waiting ${waitTime / 1000}s before falling back to ${modelsToTry[i + 1]}...`);
           
           await delay(waitTime);
           continue; // Move to the next model in the array
@@ -81,7 +81,7 @@ Rules:
     });
 
   } catch (error) {
-    console.error("AI Generation Error:", error);
+    //console.error("AI Generation Error:", error);
 
     if (error.status === 503 || error.status === 429) {
       return res.status(error.status).json({
