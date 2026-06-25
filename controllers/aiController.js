@@ -83,12 +83,21 @@ Rules:
   } catch (error) {
     //console.error("AI Generation Error:", error);
 
-    if (error.status === 503 || error.status === 429) {
-      return res.status(error.status).json({
-        success: false,
-        message: "All free AI tier routes are currently congested. Please try again in a few moments.",
-      });
-    }
+    if (error.status === 503) {
+  return res.status(503).json({
+    success: false,
+    message:
+      "The AI service is currently experiencing high demand. Please try again in a few moments.",
+  });
+}
+
+if (error.status === 429) {
+  return res.status(429).json({
+    success: false,
+    message:
+      "AI usage limit reached. Please wait a while before generating another post.",
+  });
+}
 
     return res.status(500).json({
       success: false,
